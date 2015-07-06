@@ -20,6 +20,9 @@
 		{% for message in get_flashed_messages() %}
 			{{ message }}
 		{% endfor %}
+		{% if current_user.name %}
+			<h5> SCORE is: {{ current_user.score }}</h5>
+		{% endif %}
 	</div>
 </body>
 </html>

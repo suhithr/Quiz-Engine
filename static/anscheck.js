@@ -19,6 +19,8 @@ function startScript( current_userId) {
 					alert(data.score);//Score
 					if(data.correct > 0) {
 						alert('Correct answer ');
+						//var newDiv = "<div>Correct!!</div>";
+						//$("<div>Correct!!</div>").hide().appendTo("select." + selectedId).fadeIn("fast");
 					}
 					else {
 						alert('Sorry bro');

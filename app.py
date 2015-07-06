@@ -2,9 +2,9 @@
 from flask import Flask, render_template, url_for, request, session, redirect, flash, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
-from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
+from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user, user_logged_in
 
-import pickle
+from pickle import loads, dumps
 import json
 from forms import LoginForm, RegisterForm, SubmitForm, QuizForm
 
@@ -65,6 +65,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+	logout_user()
+	flash('You have been logged out')
 	form = RegisterForm()
 	if form.validate_on_submit():
 		user = User(
@@ -114,14 +116,16 @@ def submit():
 def quiz():
 	form = QuizForm()
 	if current_user.answered is None:
-		current_user.answered = pickle.dumps([])
+		current_user.answered = dumps([])
 		db.session.commit()
+		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).all()
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
 
-
-	alreadyAns = pickle.loads(current_user.answered)
-	#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
-	questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
-	return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
+	else:
+		alreadyAns = loads(current_user.answered)
+		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
 
 @app.route('/answer')
 def fetch_answer():
@@ -130,10 +134,6 @@ def fetch_answer():
 	id = request.args.get('id', 0, type=int)
 	value = request.args.get('value', 0, type=str)
 	userId = request.args.get('userid', 0, type=int)
-
-	print 'ID is ' + str(id)
-	print 'Value is ' + str(value)
-	print 'Userid is ' + str(userId)
 
 	#Fetching question and User data
 	attempted_question = Questions.query.filter( Questions.questionid == id ).all()
@@ -159,16 +159,59 @@ def fetch_answer():
 
 
 	beforePickle = current_user.answered
-	afterPickle = pickle.loads(beforePickle)
+	afterPickle = loads(beforePickle)
 
 	afterPickle.append(id)
 	print afterPickle
-	current_user.answered = pickle.dumps(afterPickle)
-	print pickle.loads(current_user.answered)
+	current_user.answered = dumps(afterPickle)
+	print loads(current_user.answered)
 	db.session.commit()
 
 	return jsonify(score = presentScore, correct = correct)
 
+
+@app.route('/quiz/<string:category>')
+@login_required
+def categorywise(category):
+	categoryList = ['math',
+		'pop_culture',
+		'history',
+		'sports',
+		'business',
+		'tech',
+		'geography',
+		'other',]
+	if category in categoryList:
+		form = QuizForm()
+		if current_user.answered is None:
+			current_user.answered = dumps([])
+			db.session.commit()
+
+		alreadyAns = loads(current_user.answered)
+		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).filter( Questions.category == category ).all()
+		print str(questions_to_display)
+		if len(questions_to_display) is 0:
+			flash("We're so sorry but it seems that there are no questions on this topic")
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
+	else:
+		form = QuizForm()
+		if current_user.answered is None:
+			current_user.answered = dumps([])
+			db.session.commit()
+
+
+		alreadyAns = loads(current_user.answered)
+		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
+		flash('Please enter a url where the category is any one of' + str(categoryList))
+		return redirect(url_for('quiz.html', questions_to_display=questions_to_display, form=form))
+
+@app.route('/score')
+@login_required
+def scoreboard():
+	users = User.query.order_by(User.score.desc())
+	return render_template('scoreboard.html', users=users)
 
 #Starting the server with the run method
 if __name__ == '__main__':
