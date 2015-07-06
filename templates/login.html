@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% block title %}
+	Login
+{% endblock title %}
 {% block content %}
 <h3>Feel Free to Login :P</h3>
 <br>
 <form action="" method='POST'>
-	{{ form.csrf_tokem }}
+	{{ form.csrf_token }}
 	<p>
 		{{ form.username(placeholder="Username") }}
 		<span class="error">
@@ -26,4 +29,4 @@
 	</p>
 	<button type="submit"> Sign In</button>
 </form>
-{% endblock %}
+{% endblock content %}

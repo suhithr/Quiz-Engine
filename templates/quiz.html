@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
+	<script type='text/javascript'>
+		//sets the global variable to the prefix to the root of the application
+		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+	</script>
+	<script type='text/javascript' src="{{ url_for('static', filename='anscheck.js') }}">
+	</script>
+	<script type='text/javascript'>
+		startScript({{ current_user.id }});
+	</script>
+	<title>Quiz - Quizzing Engine</title>
+{% endblock head %}
+{% block content %}
+<h3>Try to Answer the Questions</h3>
+<br>
+<form action="" method='POST'>
+	{{ form.csrf_token }}
+	{% for question_to_display in questions_to_display %}
+		<div class="quiz-question">
+			{{ question_to_display.question }}
+			<div class="option">
+				A: {{ question_to_display.option1 }}
+			</div>
+			<div class="option">
+				B: {{ question_to_display.option2 }}
+			</div>
+			<div class="option">
+				C: {{ question_to_display.option3 }}
+			</div>
+			<div class="option">
+				D: {{ question_to_display.option4 }}
+			</div>
+		</div>
+		<div class="quiz-answer">
+			{{ form.attempted_answer( class= question_to_display.questionid ) }}
+			<button type="submit" id="{{ question_to_display.questionid }}">Check Answer</button>
+		</div>
+	{% endfor %}
+</form>
+{% endblock content %}
+
+<!-- Add the ajax answer submission
+	Add the logic to exclude the answered questions -->

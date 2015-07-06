@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Base Page of Quizzing Engine</title>
+	{% block head %}
+			<title>{% block title %}{% endblock %} - Quizzing Engine</title>
+	{% endblock %}
 </head>
 <body>
 	<div class="container">
 
 		<!--child template -->
 		{% block content %}{% endblock %}
-
+		<br>
 		<!-- Errors -->
 		{% if error %}
 			<p class="error"><strong>Error:</strong>{{ error }}</p>
 		{% endif %}
-
+		<br>
 		<!-- Flashed Messages -->
 		{% for message in get_flashed_messages() %}
 			{{ message }}

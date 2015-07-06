@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}
+	Submission
+{% endblock title %}
+{% block content %}
+<h3>Submit Your Question to be added to the Quizzing Engine</h3>
+<br>
+<form action="" method='POST'>
+	{{ form.csrf_token }}
+	<p>
+		{{ form.question(placeholder="Question") }}
+		<span class="error">
+			{% if form.question.errors %}
+				{% for error in form.question.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.option1(placeholder="Option A") }}
+		<span class="error">
+			{% if form.option1.errors %}
+				{% for error in form.option1.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.option2(placeholder="Option B") }}
+		<span class="error">
+			{% if form.option2.errors %}
+				{% for error in form.option2.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.option3(placeholder="Option C") }}
+		<span class="error">
+			{% if form.option3.errors %}
+				{% for error in form.option3.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.option4(placeholder="Option D") }}
+		<span class="error">
+			{% if form.option4.errors %}
+				{% for error in form.option4.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.answer(placeholder="Answer") }}
+		<span class="error">
+			{% if form.answer.errors %}
+				{% for error in form.answer.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.category(placeholder="Category") }}
+		<span class="error">
+			{% if form.category.errors %}
+				{% for error in form.category.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<p>
+		{{ form.difficulty(placeholder="Difficulty") }}
+		<span class="error">
+			{% if form.difficulty.errors %}
+				{% for error in form.difficulty.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+		</span>
+	</p>
+	<button type="submit">Add the Question</button>
+</form>
+{% endblock content %}
