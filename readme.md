@@ -102,5 +102,13 @@ The app should be accessible from [localhost:5000/](localhost:5000/)
 * ![Quiz Category](/screenshots/quizmath.png)
 * ![Register](/screenshots/register.png)
 
+**Scoring**
+
+Scores depend on the difficulty of the question set during question submission
+
+* Easy +1/-1
+* Moderate +2/-1
+* Hard +3/-1
+* Insane +4/-1
 
 
