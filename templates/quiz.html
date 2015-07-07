@@ -29,9 +29,9 @@
 		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		//Calls the answer checking script with the variable argument
 		$(document).ready(function() {
-			startScript({{ current_user.id }});
 			$('select').material_select();
 			$(".button-collapse").sideNav(); 
+			startScript({{ current_user.id }}, {{ users[0].score }});
 		});
 	</script>
 
@@ -109,6 +109,7 @@
 <form action="" method='POST'>
 	{{ form.csrf_token }}
 	{% for question_to_display in questions_to_display %}
+	<div class="{{ question_to_display.questionid }}">
 		<div class="row">
 			<div class="col s12">
 				{{ question_to_display.question }}
@@ -139,7 +140,9 @@
 			<button class="btn waves-effect waves-light" type="submit" id="{{ question_to_display.questionid }}">Confirm Answer</button>
 			<br>
 			<br>
+		</div>
 	{% endfor %}
+
 </form>
 {% endblock content %}
 

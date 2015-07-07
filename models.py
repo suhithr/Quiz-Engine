@@ -8,7 +8,6 @@ class User(db.Model):
 	username = db.Column(db.String, nullable=False)
 	password = db.Column(db.String, nullable=False)
 	score = db.Column(db.Integer, nullable=False)
-	#Is it ok to let answered be nullable?
 	answered = db.Column(db.PickleType)
 
 	def __init__(self, name, username, password, score):

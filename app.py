@@ -108,7 +108,7 @@ def submit():
 		db.session.add(questiondata)
 		db.session.commit()
 		flash('Your question has been nestled deep within the quizzing engine')
-		return render_template('submit.html', form=form, users=users)
+		return render_template('submit.html', form=form, users=getStandings())
 	return render_template('submit.html', form=form, users=getStandings())
 
 @app.route('/quiz', methods=['GET', 'POST'])
