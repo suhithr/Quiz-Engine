@@ -1,34 +1,29 @@
 {% extends "base.html" %}
 {% block head %}
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<!-- JQUERY import -->
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
 
-	<!-- Answer Checking Script -->
-	<script type='text/javascript' src="{{ url_for('static', filename='anscheck.js') }}">
-	</script>
-
-	<!-- Required for the page -->
 	<script type='text/javascript'>
-		
 		//sets the global variable to the prefix to the root of the application
 		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		//Calls the answer checking script with the variable argument
-		startScript({{ current_user.id }});
 	</script>
-
-	<!-- Materialize, note: the js has to be loaded AFTER Jquery -->
+	<!-- Materialize -->
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 	<!-- Compiled and minified JavaScript -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
-	<!--Let browser know website is optimized for mobile-->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-	<title>Quiz - Quizzing Engine</title>
+	<title>Scoreboard - Quizzing Engine</title>
 {% endblock head %}
-{% block content %}
 
+{% block content %}
+<!-- NavBar -->
 <!-- Dropdown Structure -->
 <ul id="quizdropdown" class="dropdown-content">
 	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
@@ -42,49 +37,38 @@
 	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
 </ul>
 
-<!-- NavBar -->
-
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo"> Quiz Engine</a>
 		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			<li><a href="{{ url_for('home') }}">Home</a></li>
-			<li class="active"><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
-			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			<li class="active"><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>
 		</ul>
 	</div>
 </nav>
+<!-- End NavBar -->
 
-<h5 class="center-align">Try to Answer the Questions</h5>
-<br>
-<form action="" method='POST'>
-	{{ form.csrf_token }}
-	{% for question_to_display in questions_to_display %}
-		<div class="quiz-question">
-			{{ question_to_display.question }}
-			<div class="option">
-				A: {{ question_to_display.option1 }}
-			</div>
-			<div class="option">
-				B: {{ question_to_display.option2 }}
-			</div>
-			<div class="option">
-				C: {{ question_to_display.option3 }}
-			</div>
-			<div class="option">
-				D: {{ question_to_display.option4 }}
-			</div>
-		</div>
-		<div class="quiz-answer">
-			{{ form.attempted_answer( class= question_to_display.questionid ) }}
-			<button type="submit" id="{{ question_to_display.questionid }}">Check Answer</button>
-		</div>
-	{% endfor %}
-</form>
+<h3 class="valign center-align">Scoreboard</h3>
+<table class="bordered hoverable centered responsive-table">
+	<thead>
+		<tr>
+			<th data-field='position'>Position</th>
+			<th data-field='name'>Player</th>
+			<th data-field='score'>Score</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for user in users %}
+			<tr>
+				<td>{{ loop.index }}</td>
+				<td>{{ user.name }}</td>
+				<td>{{ user.score }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% endblock content %}
-
-<!-- Add the ajax answer submission
-	Add the logic to exclude the answered questions -->

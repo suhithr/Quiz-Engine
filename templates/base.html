@@ -18,10 +18,10 @@
 		<br>
 		<!-- Flashed Messages -->
 		{% for message in get_flashed_messages() %}
-			{{ message }}
+			<ul><li>{{ message }}</li></ul>
 		{% endfor %}
 		{% if current_user.name %}
-			<h5> SCORE is: {{ current_user.score }}</h5>
+			<h6> Your SCORE is: {{ current_user.score }}</h6>
 		{% endif %}
 	</div>
 </body>

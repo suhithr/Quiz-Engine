@@ -1,4 +1,111 @@
 {% extends "base.html" %}
+{% block head %}
+
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<!-- JQUERY import -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
+
+	<script type='text/javascript'>
+		//sets the global variable to the prefix to the root of the application
+		
+		$(document).ready(function(){
+    		$('.collapsible').collapsible({
+      		accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    		});
+    		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  		});
+	</script>
+	<!-- Materialize -->
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<style>
+	.brand-logo{
+		padding-left: 10px;
+	}
+	img#giticon {
+		padding-right: 5px;
+		height: 25px;
+		width: 25px;
+	}
+	img#giticon.hover {
+		opacity: 0.9;
+	}
+	a.collapsible{
+
+	}
+	</style>
+
+	<title>Home - Quizzing Engine</title>
+
+{% endblock head %}
 {% block content %}
-Welcome to the Quizzing Engine
+
+<!-- NavBar -->
+<!-- Dropdown Structure -->
+<ul id="quizdropdown" class="dropdown-content">
+	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
+	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
+	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
+	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
+	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
+	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
+	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
+	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
+	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
+</ul>
+
+<nav class="#448aff teal accent-4">
+	<div class="nav-wrapper">
+		<a href="{{ url_for('home') }}" class="brand-logo">Quiz Engine</a>
+		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
+			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			{% if current_user.name %}
+				<li><a href="{{ url_for('logout') }}">Logout</a></li>
+			{% else %}
+				<li><a href="{{ url_for('login') }}">Login</a></li>
+				<li><a href="{{ url_for('register') }}">Register</a></li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+<!-- End NavBar -->
+<div class="row">
+	<div class="col s12">
+		<div class="card #004d40 teal darken-4 hoverable">
+			<div class="card-content white-text center-align">
+				<span class="card-title">Welcome to the Quizzing Engine</span>
+				<p>The quizzing engine is a quiz website where users can answer questions submitted by other users in order to get increase their score and reach the top of the <a href="{{ url_for('scoreboard') }}">leaderboard</a>.
+					The source code of the Quiz engine is below.</p>
+			</div>
+			<div class="card-action center-align">
+				<a href="https://www.github.com/suhithr/Quiz-Engine"><img id="giticon" src="/static/img/GitHub-Mark-Light-32px.png">Source</a>
+			</div>
+		</div>
+	</div>
+</div>
+<ul class="collapsible popout center-align" data-collapsible="accordion">
+	<li>
+		<div class="collapsible-header"><a class="amber-text text-darken-1" href="{{ url_for('quiz') }}">Questions</a></div>
+		<div class="collapsible-body"><p>Test your wits against questions set by other users. But be careful because while the correct answer will net you a higher score, points will be deducted if you answer wrongly.</p></div>
+	</li>
+	<li>
+		<div class="collapsible-header"><a class="amber-text text-darken-1" href="{{ url_for('submit') }}">Question Creation</a></div>
+		<div class="collapsible-body"><p>Show the world how smart you are by setting the trickiest, most intriguing questions.</p></div>
+	</li>
+	<li>
+		<div class="collapsible-header"><a class="amber-text text-darken-1" href="{{ url_for('scoreboard') }}">Leaderboard</a></div>
+		<div class="collapsible-body"><p>Check your standing against other users.</p></div>
+	</li>
+</ul>
 {% endblock %}

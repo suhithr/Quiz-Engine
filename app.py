@@ -36,9 +36,7 @@ def load_user(userid):
 	return User.query.filter(User.id == int(userid)).first()
 
 @app.route('/')
-@login_required
 def home():
-	print current_user.id
 	return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -123,7 +121,7 @@ def quiz():
 
 	else:
 		alreadyAns = loads(current_user.answered)
-		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
 		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
 
@@ -137,7 +135,6 @@ def fetch_answer():
 
 	#Fetching question and User data
 	attempted_question = Questions.query.filter( Questions.questionid == id ).all()
-#####
 	presentUser = User.query.get( userId )
 	presentScore = presentUser.score
 
@@ -145,8 +142,15 @@ def fetch_answer():
 
 	#Appropirately changing the USER's score
 	if attempted_question[0].answer == value:
-		print presentUser.score
-		presentScore = presentScore + 1
+		if attempted_question[0].difficulty == 'easy':
+			presentScore = presentScore + 1
+		elif attempted_question[0].difficulty == 'moderate':
+			presentScore = presentScore + 2
+		elif attempted_question[0].difficulty == 'hard':
+			presentScore = presentScore + 3
+		elif attempted_question[0].difficulty == 'insane':
+			presentScore = presentScore + 4		
+		
 		presentUser.score = presentScore
 		print presentUser.score
 		correct = 1
@@ -188,7 +192,7 @@ def categorywise(category):
 			db.session.commit()
 
 		alreadyAns = loads(current_user.answered)
-		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).filter( Questions.category == category ).all()
 		print str(questions_to_display)
 		if len(questions_to_display) is 0:
@@ -202,7 +206,7 @@ def categorywise(category):
 
 
 		alreadyAns = loads(current_user.answered)
-		#Check the questions to display '''.filter( ~Questions.questionid.in_(current_user.answered) )'''
+		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
 		flash('Please enter a url where the category is any one of' + str(categoryList))
 		return redirect(url_for('quiz.html', questions_to_display=questions_to_display, form=form))
@@ -210,6 +214,7 @@ def categorywise(category):
 @app.route('/score')
 @login_required
 def scoreboard():
+	#To allow sorting by username just do an ajax request back to score board with argument (like /score/#username then /score/#score)
 	users = User.query.order_by(User.score.desc())
 	return render_template('scoreboard.html', users=users)
 

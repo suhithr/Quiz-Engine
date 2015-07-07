@@ -1,14 +1,63 @@
 {% extends "base.html" %}
-{% block title %}
-	Submission
-{% endblock title %}
+{% block head %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
+
+	<!-- Materialize, note: the js has to be loaded AFTER Jquery -->
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<script type='text/JavaScript'>
+	$(document).ready(function() {
+		$('select').material_select();
+	});
+	</script>
+
+	<title>Submit - Quizzing Engine</title>
+{% endblock head %}
 {% block content %}
-<h3>Submit Your Question to be added to the Quizzing Engine</h3>
+
+<!-- NavBar -->
+<!-- Dropdown Structure -->
+<ul id="quizdropdown" class="dropdown-content">
+	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
+	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
+	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
+	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
+	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
+	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
+	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
+	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
+	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
+</ul>
+
+<nav class="#448aff teal accent-4">
+	<div class="nav-wrapper">
+		<a href="{{ url_for('home') }}" class="brand-logo"> Quiz Engine</a>
+		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="{{ url_for('home') }}">Home</a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li class="active"><a href="{{ url_for('submit') }}">Add Questions</a></li>
+			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
+		</ul>
+	</div>
+</nav>
+<!-- End NavBar -->
+
+<h5 class="center-align">Submit Your Question to be added to the Quizzing Engine</h5>
 <br>
 <form action="" method='POST'>
 	{{ form.csrf_token }}
-	<p>
+	<div class="input-field">
 		{{ form.question(placeholder="Question") }}
+		<label for="question">Question:</label>
 		<span class="error">
 			{% if form.question.errors %}
 				{% for error in form.question.errors %}
@@ -16,9 +65,11 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+<div class="row">
+	<div class="input-field col s6">
 		{{ form.option1(placeholder="Option A") }}
+		<label for="option1">A:</label>
 		<span class="error">
 			{% if form.option1.errors %}
 				{% for error in form.option1.errors %}
@@ -26,9 +77,10 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+	<div class="input-field col s6">
 		{{ form.option2(placeholder="Option B") }}
+		<label for="option2">B:</label>
 		<span class="error">
 			{% if form.option2.errors %}
 				{% for error in form.option2.errors %}
@@ -36,9 +88,12 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+</div>
+<div class="row">
+	<div class="input-field col s6">
 		{{ form.option3(placeholder="Option C") }}
+		<label for="option3">C:</label>
 		<span class="error">
 			{% if form.option3.errors %}
 				{% for error in form.option3.errors %}
@@ -46,9 +101,10 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+	<div class="input-field col s6">
 		{{ form.option4(placeholder="Option D") }}
+		<label for="option4">D:</label>
 		<span class="error">
 			{% if form.option4.errors %}
 				{% for error in form.option4.errors %}
@@ -56,9 +112,11 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+</div>
+	<div class="input-field">
 		{{ form.answer(placeholder="Answer") }}
+		<label for="answer">Correct Answer:</label>
 		<span class="error">
 			{% if form.answer.errors %}
 				{% for error in form.answer.errors %}
@@ -66,9 +124,10 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+	<div class="input-field">
 		{{ form.category(placeholder="Category") }}
+		<label for="category">Category:</label>
 		<span class="error">
 			{% if form.category.errors %}
 				{% for error in form.category.errors %}
@@ -76,9 +135,10 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<p>
+	</div>
+	<div class="input-field">
 		{{ form.difficulty(placeholder="Difficulty") }}
+		<label for="difficulty">Difficulty:</label>
 		<span class="error">
 			{% if form.difficulty.errors %}
 				{% for error in form.difficulty.errors %}
@@ -86,7 +146,9 @@
 				{% endfor %}
 			{% endif %}
 		</span>
-	</p>
-	<button type="submit">Add the Question</button>
+	</div>
+	<div class="valign-wrapper">
+		<button class="valign btn-large waves-effect waves-light" type="submit">Add the Question     <i class="material-icons">send</i></button>
+	</div>
 </form>
 {% endblock content %}

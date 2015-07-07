@@ -2,3 +2,6 @@
 *.pyc
 config.py
 /static/jquery.min.js
+/static/css
+/static/font
+/static/js
