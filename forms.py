@@ -48,7 +48,7 @@ class SubmitForm(Form):
 
 class QuizForm(Form):
 	attempted_answer = SelectField(
-		'attempt',
+		'attempted_answer',
 		choices=[('option1', 'A'), ('option2', 'B'), ('option3', 'C'), ('option4', 'D')],
 		validators=[DataRequired()]
 	)

@@ -16,6 +16,7 @@
       		accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
     		});
     		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    		$(".button-collapse").sideNav(); 
   		});
 	</script>
 	<!-- Materialize -->
@@ -37,9 +38,11 @@
 	img#giticon.hover {
 		opacity: 0.9;
 	}
-	a.collapsible{
-
+	#crown {
+		height: 20px;
+		width: 20px;
 	}
+
 	</style>
 
 	<title>Home - Quizzing Engine</title>
@@ -64,8 +67,36 @@
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo">Quiz Engine</a>
-		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<a href="" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
+			<li class="active"><a href="{{ url_for('home') }}">Home</a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
+			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			{% if current_user.name %}
+				<li><a href="{{ url_for('logout') }}">Logout</a></li>
+			{% else %}
+				<li><a href="{{ url_for('login') }}">Login</a></li>
+				<li><a href="{{ url_for('register') }}">Register</a></li>
+			{% endif %}
+		</ul>
+		<ul id="mobile" class="side-nav">
+			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
 			<li class="active"><a href="{{ url_for('home') }}">Home</a></li>
 			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>

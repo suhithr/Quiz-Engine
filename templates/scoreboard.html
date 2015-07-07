@@ -11,6 +11,9 @@
 	<script type='text/javascript'>
 		//sets the global variable to the prefix to the root of the application
 		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		$(document).ready(function(){
+			$(".button-collapse").sideNav(); 
+		});
 	</script>
 	<!-- Materialize -->
 	<!-- Compiled and minified CSS -->
@@ -19,6 +22,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+	<style>
+	#crown {
+		height: 20px;
+		width: 20px;
+	}
+	</style>
 	<title>Scoreboard - Quizzing Engine</title>
 {% endblock head %}
 
@@ -40,8 +49,31 @@
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo"> Quiz Engine</a>
-		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<a href="" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
+			<li><a href="{{ url_for('home') }}">Home</a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
+			<li class="active"><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
+		</ul>
+		<ul id="mobile" class="side-nav">
+			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
 			<li><a href="{{ url_for('home') }}">Home</a></li>
 			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>

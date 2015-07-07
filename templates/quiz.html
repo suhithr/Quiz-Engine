@@ -13,7 +13,11 @@
 		//sets the global variable to the prefix to the root of the application
 		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 		//Calls the answer checking script with the variable argument
-		startScript({{ current_user.id }});
+		$(document).ready(function() {
+			startScript({{ current_user.id }});
+			$('select').material_select();
+			$(".button-collapse").sideNav(); 
+		});
 	</script>
 
 	<!-- Materialize, note: the js has to be loaded AFTER Jquery -->
@@ -24,6 +28,13 @@
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<style>
+	#crown {
+		height: 20px;
+		width: 20px;
+	}
+	</style>
 
 	<title>Quiz - Quizzing Engine</title>
 {% endblock head %}
@@ -47,8 +58,31 @@
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo"> Quiz Engine</a>
-		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<a href="" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a id="userscore" class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
+			<li><a href="{{ url_for('home') }}">Home</a></li>
+			<li class="active"><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
+			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
+			<li><a href="{{ url_for('logout') }}">Logout</a></li>
+		</ul>
+		<ul id="mobile" class="side-nav">
+			<li><a id="userscore" class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
+					Your SCORE is {{ current_user.score }}
+					{% if current_user.name == users[0].name %}
+					<img src="/static/img/crown.svg" id="crown">
+					{% endif %}
+				{% endif %}
+			</a>
+			</li>
 			<li><a href="{{ url_for('home') }}">Home</a></li>
 			<li class="active"><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
@@ -63,25 +97,36 @@
 <form action="" method='POST'>
 	{{ form.csrf_token }}
 	{% for question_to_display in questions_to_display %}
-		<div class="quiz-question">
-			{{ question_to_display.question }}
-			<div class="option">
-				A: {{ question_to_display.option1 }}
-			</div>
-			<div class="option">
-				B: {{ question_to_display.option2 }}
-			</div>
-			<div class="option">
-				C: {{ question_to_display.option3 }}
-			</div>
-			<div class="option">
-				D: {{ question_to_display.option4 }}
+		<div class="row">
+			<div class="col s12">
+				{{ question_to_display.question }}
 			</div>
 		</div>
-		<div class="quiz-answer">
-			{{ form.attempted_answer( class= question_to_display.questionid ) }}
-			<button type="submit" id="{{ question_to_display.questionid }}">Check Answer</button>
-		</div>
+			<div class="row">
+				<div class="col s6">
+					A: {{ question_to_display.option1 }}
+				</div>
+				<div class="col s6">
+					B: {{ question_to_display.option2 }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s6">
+					C: {{ question_to_display.option3 }}
+				</div>
+				<div class="col s6">
+					D: {{ question_to_display.option4 }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					{{ form.attempted_answer( class= question_to_display.questionid ) }}
+					<label for="attempted_answer">Select an Option:</label>					
+				</div>
+			</div>
+			<button class="btn waves-effect waves-light" type="submit" id="{{ question_to_display.questionid }}">Check Answer</button>
+			<br>
+			<br>
 	{% endfor %}
 </form>
 {% endblock content %}

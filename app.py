@@ -35,24 +35,24 @@ login_manager.login_message = 'Please login to view this page'
 def load_user(userid):
 	return User.query.filter(User.id == int(userid)).first()
 
+def getStandings():
+	users = User.query.order_by(User.score.desc())
+	return users
+
 @app.route('/')
 def home():
-	return render_template('index.html')
+	return render_template('index.html', users=getStandings())
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	logout_user()
 	form = LoginForm(request.form)
 	if request.method == 'POST':
-		print "first"
 		if form.validate_on_submit():
-			print "Second"
 			user = User.query.filter_by(username=request.form['username']).first()
-			print user
 			if user is not None and bcrypt.check_password_hash( user.password, request.form['password'] ):
 				login_user(user)
 				flash('You have been logged in.')
-				print "Success"
 				return redirect(url_for('home'))
 			else:
 				error = 'Invalid Credentials, try again'
@@ -63,21 +63,23 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+	form = RegisterForm()
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			user = User(
+				name=form.name.data,
+				username=form.username.data,
+				password=form.password.data,
+				score=0
+			)
+			db.session.add(user)
+			db.session.commit()
+			login_user(user)
+			flash('You been registered and logged in')
+			return redirect(url_for('home'))
+
 	logout_user()
 	flash('You have been logged out')
-	form = RegisterForm()
-	if form.validate_on_submit():
-		user = User(
-			name=form.name.data,
-			username=form.username.data,
-			password=form.password.data,
-			score=0
-		)
-		db.session.add(user)
-		db.session.commit()
-		login_user(user)
-		flash('You been registered and logged in')
-		return redirect(url_for('home'))
 	return render_template('register.html', form=form)
 
 @app.route('/logout')
@@ -106,8 +108,8 @@ def submit():
 		db.session.add(questiondata)
 		db.session.commit()
 		flash('Your question has been nestled deep within the quizzing engine')
-		return render_template('submit.html', form=form)
-	return render_template('submit.html', form=form)
+		return render_template('submit.html', form=form, users=users)
+	return render_template('submit.html', form=form, users=getStandings())
 
 @app.route('/quiz', methods=['GET', 'POST'])
 @login_required
@@ -117,13 +119,13 @@ def quiz():
 		current_user.answered = dumps([])
 		db.session.commit()
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).all()
-		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form, users=getStandings())
 
 	else:
 		alreadyAns = loads(current_user.answered)
 		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
-		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form, users=getStandings())
 
 @app.route('/answer')
 def fetch_answer():
@@ -138,8 +140,6 @@ def fetch_answer():
 	presentUser = User.query.get( userId )
 	presentScore = presentUser.score
 
-	print 'Answer is ' + str(attempted_question[0].answer)
-
 	#Appropirately changing the USER's score
 	if attempted_question[0].answer == value:
 		if attempted_question[0].difficulty == 'easy':
@@ -152,13 +152,10 @@ def fetch_answer():
 			presentScore = presentScore + 4		
 		
 		presentUser.score = presentScore
-		print presentUser.score
 		correct = 1
 	else:
-		print presentUser.score
 		presentScore = presentScore - 1
 		presentUser.score = presentScore
-		print presentUser.score
 		correct = 0
 
 
@@ -166,9 +163,7 @@ def fetch_answer():
 	afterPickle = loads(beforePickle)
 
 	afterPickle.append(id)
-	print afterPickle
 	current_user.answered = dumps(afterPickle)
-	print loads(current_user.answered)
 	db.session.commit()
 
 	return jsonify(score = presentScore, correct = correct)
@@ -194,10 +189,10 @@ def categorywise(category):
 		alreadyAns = loads(current_user.answered)
 		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).filter( Questions.category == category ).all()
-		print str(questions_to_display)
+
 		if len(questions_to_display) is 0:
 			flash("We're so sorry but it seems that there are no questions on this topic")
-		return render_template('quiz.html', questions_to_display=questions_to_display, form=form)
+		return render_template('quiz.html', questions_to_display=questions_to_display, form=form, users=getStandings())
 	else:
 		form = QuizForm()
 		if current_user.answered is None:
@@ -209,7 +204,7 @@ def categorywise(category):
 		#Check the questions to display
 		questions_to_display = Questions.query.filter(Questions.creatorid != str(current_user.id)).filter( ~Questions.questionid.in_(alreadyAns)).all()
 		flash('Please enter a url where the category is any one of' + str(categoryList))
-		return redirect(url_for('quiz.html', questions_to_display=questions_to_display, form=form))
+		return redirect(url_for('quiz.html', questions_to_display=questions_to_display, form=form, users=getStandings()))
 
 @app.route('/score')
 @login_required

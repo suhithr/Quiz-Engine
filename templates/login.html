@@ -13,6 +13,7 @@
 		$(document).ready(function() {
 			//sets the global variable to the prefix to the root of the application
 			$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+			$(".button-collapse").sideNav(); 
 		});
 	</script>
 	<!-- Materialize -->
@@ -45,8 +46,12 @@
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo"> Quiz Engine</a>
-		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+		<a href="" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			<li><a href="{{ url_for('home') }}">Home</a></li>
+			<li><a href="{{ url_for('register') }}">Register</a></li>
+		</ul>
+		<ul id="mobile" class="side-nav">
 			<li><a href="{{ url_for('home') }}">Home</a></li>
 			<li><a href="{{ url_for('register') }}">Register</a></li>
 		</ul>
@@ -54,7 +59,7 @@
 </nav>
 <!-- End NavBar -->
 
-<h5 class="center-align">Feel Free to Login :P</h5>
+<h5 class="center-align">Login</h5>
 <br>
 <form action="" method='POST'>
 	{{ form.csrf_token }}
@@ -76,7 +81,7 @@
 		<div class="col s6 input-field">
 			<i class="material-icons prefix">lock_outline</i>
 			{{ form.password(placeholder="Something easy to remember but hard to guess", class="validate") }}
-			<label for="password">Password</label>
+			<label for="password" data-error="wrong" data-success="right">Password</label>
 			<span class="error">
 				{% if form.password.errors %}
 					{% for error in form.password.errors %}

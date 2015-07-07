@@ -3,7 +3,24 @@
 <head>
 	{% block head %}
 			<title>{% block title %}{% endblock %} - Quizzing Engine</title>
-	{% endblock %}
+	{% endblock head%}
+	<style>
+	html, body {
+		height: 100%;
+	}
+	#container {
+		min-height: 100%;
+		position: relative;
+		margin-bottom: -200px;
+	}
+	.forfooter{
+		height: 200px;
+		clear: both;
+	}
+	footer {
+		height: 200px;
+	}
+	</style>
 </head>
 <body>
 	<div class="container">
@@ -20,9 +37,7 @@
 		{% for message in get_flashed_messages() %}
 			<ul><li>{{ message }}</li></ul>
 		{% endfor %}
-		{% if current_user.name %}
-			<h6> Your SCORE is: {{ current_user.score }}</h6>
-		{% endif %}
 	</div>
+
 </body>
 </html>
