@@ -45,6 +45,18 @@
 	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
 	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
 </ul>
+<!-- Since the selectors based on ID and it seems duplicates cause an error -->
+<ul id="quizdropdown2" class="dropdown-content">
+	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
+	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
+	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
+	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
+	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
+	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
+	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
+	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
+	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
+</ul>
 
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
@@ -60,7 +72,7 @@
 			</a>
 			</li>
 			<li><a href="{{ url_for('home') }}">Home</a></li>
-			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown2">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
 			<li class="active"><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>

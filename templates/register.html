@@ -30,18 +30,6 @@
 {% block content %}
 
 <!-- NavBar -->
-<!-- Dropdown Structure -->
-<ul id="quizdropdown" class="dropdown-content">
-	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
-	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
-	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
-	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
-	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
-	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
-	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
-	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
-	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
-</ul>
 
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">

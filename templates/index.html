@@ -8,17 +8,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
 
-	<script type='text/javascript'>
-		//sets the global variable to the prefix to the root of the application
-		
-		$(document).ready(function(){
-    		$('.collapsible').collapsible({
-      		accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    		});
-    		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    		$(".button-collapse").sideNav(); 
-  		});
-	</script>
+
 	<!-- Materialize -->
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
@@ -45,6 +35,19 @@
 
 	</style>
 
+	<script type='text/javascript'>
+		//sets the global variable to the prefix to the root of the application
+		
+		$(document).ready(function(){
+    		$('.collapsible').collapsible({
+      		accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    		});
+    		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    		$(".button-collapse").sideNav();
+    		$('select').material_select();
+  		});
+	</script>
+
 	<title>Home - Quizzing Engine</title>
 
 {% endblock head %}
@@ -63,11 +66,23 @@
 	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
 	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
 </ul>
+<!-- Since the selectors based on ID and it seems duplicates cause an error -->
+<ul id="quizdropdown2" class="dropdown-content">
+	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
+	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
+	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
+	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
+	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
+	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
+	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
+	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
+	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
+</ul>
 
 <nav class="#448aff teal accent-4">
 	<div class="nav-wrapper">
 		<a href="{{ url_for('home') }}" class="brand-logo">Quiz Engine</a>
-		<a href="" data-activates="mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+		<a href="" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
 					Your SCORE is {{ current_user.score }}
@@ -78,7 +93,7 @@
 			</a>
 			</li>
 			<li class="active"><a href="{{ url_for('home') }}">Home</a></li>
-			<li><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li><a class="dropdown-button" href="" data-activates="quizdropdown2">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
 			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
 			{% if current_user.name %}
@@ -88,7 +103,7 @@
 				<li><a href="{{ url_for('register') }}">Register</a></li>
 			{% endif %}
 		</ul>
-		<ul id="mobile" class="side-nav">
+		<ul id="mobile-demo" class="side-nav">
 			<li><a class="center-align teal-text text-darken-4" href="{{ url_for('scoreboard') }}">{% if current_user.name %}
 					Your SCORE is {{ current_user.score }}
 					{% if current_user.name == users[0].name %}

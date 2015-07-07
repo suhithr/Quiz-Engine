@@ -7,19 +7,6 @@
 	<script type='text/javascript' src="{{ url_for('static', filename='anscheck.js') }}">
 	</script>
 
-	<!-- Required for the page -->
-	<script type='text/javascript'>
-		
-		//sets the global variable to the prefix to the root of the application
-		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-		//Calls the answer checking script with the variable argument
-		$(document).ready(function() {
-			startScript({{ current_user.id }});
-			$('select').material_select();
-			$(".button-collapse").sideNav(); 
-		});
-	</script>
-
 	<!-- Materialize, note: the js has to be loaded AFTER Jquery -->
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
@@ -35,6 +22,18 @@
 		width: 20px;
 	}
 	</style>
+	<!-- Required for the page -->
+	<script type='text/javascript'>
+		
+		//sets the global variable to the prefix to the root of the application
+		$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+		//Calls the answer checking script with the variable argument
+		$(document).ready(function() {
+			startScript({{ current_user.id }});
+			$('select').material_select();
+			$(".button-collapse").sideNav(); 
+		});
+	</script>
 
 	<title>Quiz - Quizzing Engine</title>
 {% endblock head %}
@@ -42,6 +41,18 @@
 
 <!-- Dropdown Structure -->
 <ul id="quizdropdown" class="dropdown-content">
+	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
+	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
+	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
+	<li><a href="{{ url_for('categorywise', category='history') }}">History</a></li>
+	<li><a href="{{ url_for('categorywise', category='sports') }}">Sports</a></li>
+	<li><a href="{{ url_for('categorywise', category='business') }}" >Business</a></li>
+	<li><a href="{{ url_for('categorywise', category='tech') }}" class="truncate">Technology</a></li>
+	<li><a href="{{ url_for('categorywise', category='geography') }}" class="truncate">Geography</a></li>
+	<li><a href="{{ url_for('categorywise', category='other') }}">Other</a></li>
+</ul>
+<!-- Since the selectors based on ID and it seems duplicates cause an error -->
+<ul id="quizdropdown2" class="dropdown-content">
 	<li><a href="{{ url_for('quiz') }}" >All Catgories</a></li>
 	<li><a href="{{ url_for('categorywise', category='math') }}">Math</a></li>
 	<li><a href="{{ url_for('categorywise', category='pop_culture') }}">Pop Culture</a></li>
@@ -69,7 +80,7 @@
 			</a>
 			</li>
 			<li><a href="{{ url_for('home') }}">Home</a></li>
-			<li class="active"><a class="dropdown-button" href="" data-activates="quizdropdown">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
+			<li class="active"><a class="dropdown-button" href="" data-activates="quizdropdown2">Questions<i class="material-icons right">arrow_drop_down</i></a></li>
 			<li><a href="{{ url_for('submit') }}">Add Questions</a></li>
 			<li><a href="{{ url_for('scoreboard') }}">Scoreboard</a></li>
 			<li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -92,7 +103,8 @@
 	</div>
 </nav>
 
-<h5 class="center-align">Try to Answer the Questions</h5>
+<h5 class="center-align">Answer the Questions</h5>
+<h6>Choose your answer from the DROPDOWNS and click to submit</h6>
 <br>
 <form action="" method='POST'>
 	{{ form.csrf_token }}
@@ -124,7 +136,7 @@
 					<label for="attempted_answer">Select an Option:</label>					
 				</div>
 			</div>
-			<button class="btn waves-effect waves-light" type="submit" id="{{ question_to_display.questionid }}">Check Answer</button>
+			<button class="btn waves-effect waves-light" type="submit" id="{{ question_to_display.questionid }}">Confirm Answer</button>
 			<br>
 			<br>
 	{% endfor %}
