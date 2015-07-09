@@ -1,5 +1,5 @@
 ##Quiz Engine
-This project is packaged as a **Flask** App with a Postgresql Database and SQLAlchemy ORM. It's a quiz platform with crowdsourced questions. Users get points for answering questions correctly and can check their position against other site users. Users can also submit their own questions to the site.
+This project is packaged as a **Flask** App with a PostgreSQL Database and SQLAlchemy ORM. It's a quiz platform with crowdsourced questions. Users get points for answering questions correctly and can check their position against other site users. Users can also submit their own questions to the site.
 
 Be sure to check your score section when you get the most number of points. Hint: :crown:
 
@@ -8,8 +8,8 @@ Be sure to check your score section when you get the most number of points. Hint
 Client Side:
 
 * HTML with Jinja2 Templating, CSS, JavaScript
-* [MaterializeCSS](http://wwwmaterializecss.com)
-* [JQuery 1.11.3](https://www.jquery.com)
+* [MaterializeCSS](http://wwwmaterializecss.com) (Loaded with CDN)
+* [JQuery 1.11.3](https://www.jquery.com) (Loaded with CDN)
 
 Server Side:
 
@@ -17,7 +17,7 @@ Server Side:
 * [PostgreSQL](http://www.postgresql.org/)
 * [SQLAlchemy](http://www.sqlalchemy.org/)
 
-Note: The modules required recorded with `pip freeze` are in [requirements.txt](https://github.com/suhithr/Quiz-Engine/blob/master/requirements.txt)
+Note: The modules required recorded with `pip freeze` are in [requirements.txt](https://github.com/suhithr/Quiz-Engine/blob/master/requirements.txt).
 
 **Server Routes:**
 
@@ -41,6 +41,8 @@ The database contains 2 tables. The table 'quizuser1' is from the User class, an
 
 * User -> [id, name, username, password, score, answered]
 * Questions -> [question, option1, option2, option3, option4, answer, creatorid, questionid, category, difficulty]
+
+Note: All fields are either simple Integer or String except 'answered' in the User class. It is [pickletype](http://docs.sqlalchemy.org/en/rel_1_0/core/type_basics.html#sqlalchemy.types.PickleType) used to hold the python list which is used to maintain which questions a user has already answered.
 
 **Modules:**
 
