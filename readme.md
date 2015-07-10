@@ -31,7 +31,7 @@ Note: The modules required recorded with `pip freeze` are in [requirements.txt](
 *Protected Routes*
 
 * '/quiz' - Questions Displayed for User to Answer
-* '/quiz/<category>' - Questions of the specified category displayed, the category must be one of ['math','pop_culture','history','sports','business','tech','geography','other']
+* '/quiz/\<category\>' - Questions of the specified category displayed, the category must be one of ['math','pop_culture','history','sports','business','tech','geography','other']
 * '/score' - To see the standings among users
 * '/submit' - Where users can submit questions of their own
 
