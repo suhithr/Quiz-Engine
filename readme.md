@@ -75,7 +75,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True #This makes the login_required decorator get ignored
 
-#To be sure that it's not running in DEBUG on a Production Server
+#To be sure that it's not running in DEBUG on a Production Server, being explicit for safety
 class ProductionConfig(BaseConfig):
     DEBUG = False
     TESTING = False
@@ -106,7 +106,7 @@ The app should be accessible from [localhost:5000/](localhost:5000/)
 
 **Scoring**
 
-Scores depend on the difficulty of the question set during question submission
+Scores depend on the difficulty of the question, which is set during question submission
 
 * Easy +1/-1
 * Moderate +2/-1
